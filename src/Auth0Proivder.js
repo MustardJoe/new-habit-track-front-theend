@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import createAuth0Client from '@auth0/auth0-spa-js';
+import { setToken } from './services/habitsApi';
 
 const DEFAULT_REDIRECT_CALLBACK = () => {
-  window.history.replaceState({},
+  window.history.pushState({},
     document.title,
     window.location.pathname);
 };
@@ -13,6 +14,7 @@ export const useAuth0 = () => useContext(Auth0Context);
 export const withSession = Comp => {
   return function WithSessionHOC(props) {
     const { isAuthenticated, loading, auth0Client } = useAuth0();
+    console.log('im here in auth0');
     if(!isAuthenticated && !loading) auth0Client.loginWithRedirect();
 
     if(!isAuthenticated && loading) return null;
@@ -44,7 +46,11 @@ export default function Auth0Provider({ children, onRedirectCallback = DEFAULT_R
       if(isAuthenticated) {
         const user = await auth0.getUser();
         setUser(user);
+ 
+        const claims = await auth0.getIdTokenClaims();
+        setToken(claims.__raw);
       }
+
 
       updateLoading(false);
     };

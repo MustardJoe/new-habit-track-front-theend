@@ -4,10 +4,14 @@
     "sourceType": "module"
   },
   "parser": "babel-eslint",
+  "globals": {
+    "process": true
+  },
   "env": {
     "es6": true,
     "browser": true,
-    "jest": true
+    "jest": true,
+    "node": true,
   },
   "plugins": [
     "babel",
